@@ -1,0 +1,10 @@
+name: ServerAPI
+main: alemiz\ServerStatus\Main
+version: 1.0.0
+api: [3.0.0, 3.5.1, 4.0.0]
+
+commands:
+ servers:
+  description: "Display info about server status"
+  usage: "Just type /servers"
+  permission: server.servers
