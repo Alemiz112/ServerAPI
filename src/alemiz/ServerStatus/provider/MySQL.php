@@ -17,10 +17,10 @@ class MySQL {
 
     public function connect($status)
     {
-        $host = '192.168.2.84';
-        $dbname = 'zadmin_mcpe';
-        $username = 'mcpe';
-        $password = 'y4u8ehe5e';
+        $host = $this->plugin->cfg->get("host");
+        $dbname = $this->plugin->cfg->get("db");
+        $username = $this->plugin->cfg->get("user");
+        $password = $this->plugin->cfg->get("password");
 
         $id = $this->plugin->cfg->get("ID");
 
