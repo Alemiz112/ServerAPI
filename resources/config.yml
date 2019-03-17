@@ -25,5 +25,5 @@ db: main_db
 #Fake slots settings
 #Max Fake slots
 FakeMax: 50
-#Update Interval, TICKS (20 = 1 second)
-FakeInterval: 20
+#Update Interval, in SECONDS
+FakeInterval: 40

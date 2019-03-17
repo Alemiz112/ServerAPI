@@ -43,7 +43,7 @@ class Main extends PluginBase{
         }
 
         $fake_int = $this->cfg->get("FakeInterval");
-        $this->getScheduler()->scheduleRepeatingTask(new SetOnlinePlayers($this), $fake_int);
+        $this->getScheduler()->scheduleRepeatingTask(new SetOnlinePlayers($this), $fake_int * 20);
 
         $this->getServer()->getQueryInformation()->getMaxPlayerCount();
     }
