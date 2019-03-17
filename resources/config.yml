@@ -13,9 +13,17 @@
 ID: 1
 Server: "Main"
 
-#Database Connection
+#Database Connection Settings
+MySql: false
+#MySql Parameters
 host: 0.0.0.0
 port: 3306
 user: root
 password: xxxxxx
 db: main_db
+
+#Fake slots settings
+#Max Fake slots
+FakeMax: 50
+#Update Interval, TICKS (20 = 1 second)
+FakeInterval: 20

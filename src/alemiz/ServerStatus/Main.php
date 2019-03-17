@@ -14,6 +14,8 @@ use pocketmine\utils\TextFormat;
 use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\math\Vector3;
 use pocketmine\utils\Config;
+use pocketmine\scheduler\Task as PluginTask;
+
 
 use alemiz\ServerStatus\provider\MySQL;
 
@@ -29,22 +31,31 @@ class Main extends PluginBase{
     public $cfg;
 
     public function onEnable(){
-		$this->getLogger()->info("Plugin has been enabled!");
+		$this->getLogger()->info(TextFormat::GREEN."ServerAPI by Alemiz ENABLED!");
 		@mkdir($this->getDataFolder());
         $this->saveDefaultConfig();
         $this->cfg = new Config($this->getDataFolder() . "config.yml", Config::YAML);
 
-        $status = "Online";
-        $set_status = new provider\MySQL($this);
-        $set_status->connect($status);
+        if($this->cfg->get("MySql") == "true"){
+            $status = "Online";
+            $set_status = new provider\MySQL($this);
+            $set_status->connect($status);
+        }
 
+        $fake_int = $this->cfg->get("FakeInterval");
+        $this->getScheduler()->scheduleRepeatingTask(new SetOnlinePlayers($this), $fake_int);
+
+        $this->getServer()->getQueryInformation()->getMaxPlayerCount();
     }
 
 	public function onDisable(){
-        $status = "Offline";
-        $set_status = new provider\MySQL($this);
-        $set_status->connect($status);
+        $this->getLogger()->info(TextFormat::RED. "ServerAPI by Alemiz DISSABLED!");
 
+        if($this->cfg->get("MySql") == "true"){
+            $status = "Offline";
+            $set_status = new provider\MySQL($this);
+            $set_status->connect($status);
+        }
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
@@ -63,4 +74,26 @@ class Main extends PluginBase{
 				return false;
 		}
 	}
+}
+
+class SetOnlinePlayers extends PluginTask{
+    private $plugin;
+
+    public function __construct($plugin) {
+        $this->plugin = $plugin;
+    }
+
+    public function onRun($tick){
+         $query = $this->plugin->getServer()->getQueryInformation();
+         $max = $query->getMaxPlayerCount();
+         $fake_max = $this->plugin->cfg->get("FakeMax");
+
+         if($max <= $fake_max){
+             $fake_max= $max - 2;
+             $this->plugin->getLogger()->info(TextFormat::RED. "Setting FakeMax to ". $fake_max." because of MaxPlayers".TextFormat::YELLOW." Please change it, RESTART server!");
+         }
+
+         $online = rand(1,$fake_max);
+         $query->setPlayerCount($online);
+    }
 }
