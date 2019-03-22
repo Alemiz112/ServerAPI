@@ -19,7 +19,6 @@ use pocketmine\scheduler\Task as PluginTask;
 
 use alemiz\ServerStatus\provider\MySQL;
 
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -42,10 +41,10 @@ class Main extends PluginBase{
             $set_status->connect($status);
         }
 
-        $fake_int = $this->cfg->get("FakeInterval");
-        $this->getScheduler()->scheduleRepeatingTask(new SetOnlinePlayers($this), $fake_int * 20);
-
-        $this->getServer()->getQueryInformation()->getMaxPlayerCount();
+        if($this->cfg->get("FakeSlots") == "true"){
+            $fake_int = $this->cfg->get("FakeInterval");
+            $this->getScheduler()->scheduleRepeatingTask(new SetOnlinePlayers($this), $fake_int * 20);
+        }
     }
 
 	public function onDisable(){
@@ -53,28 +52,23 @@ class Main extends PluginBase{
 
         if($this->cfg->get("MySql") == "true"){
             $status = "Offline";
-            $set_status = new provider\MySQL($this);
-            $set_status->connect($status);
         }
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
 		switch($command->getName()){
             case "servers":
-                if($this->cfg->get("Status") === "Online"){
-                    $sender->sendMessage(TextFormat::GREEN. "Server is ONLINE!");
-                }else {
-                    $sender->sendMessage(TextFormat::DARK_RED. "Server is OFFLINE!");
-
-                }
+                $sender->getSynapse();
+                $sender =synapse\Player::getSynapse();
                 return true;
-
 
             default:
 				return false;
 		}
 	}
 }
+
+
 
 class SetOnlinePlayers extends PluginTask{
     private $plugin;

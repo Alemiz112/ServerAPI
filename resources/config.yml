@@ -23,7 +23,8 @@ password: xxxxxx
 db: main_db
 
 #Fake slots settings
+FakeSlots: true
 #Max Fake slots
 FakeMax: 50
 #Update Interval, in SECONDS
-FakeInterval: 40
+FakeInterval: 60
