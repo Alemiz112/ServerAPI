@@ -52,6 +52,8 @@ class Main extends PluginBase{
 
         if($this->cfg->get("MySql") == "true"){
             $status = "Offline";
+            $set_status = new provider\MySQL($this);
+            $set_status->connect($status);
         }
     }
 
